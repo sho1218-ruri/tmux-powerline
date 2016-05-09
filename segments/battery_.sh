@@ -14,7 +14,9 @@ run_segment() {
   value=$(echo $remaining | sed -e 's/%//')
 
   if [ $status == 'discharging' ]; then
-    if [ $value -ge 75 ]&&[ $value -lt 100 ]; then
+    if [ $value == 100 ]; then
+      echo "${BATTERY_FULL} ${remaining}"
+    elif [ $value -ge 75 ]&&[ $value -lt 100 ]; then
       echo "${BATTERY_THREE_QUARTER} ${remaining}"
     elif [ $value -ge 50 ] && [ $value -lt 75 ]; then
       echo "${BATTERY_HALF} ${remaining}"
@@ -26,7 +28,7 @@ run_segment() {
   elif [ $status == 'charging' ]; then
     echo "${BATTERY_CHARGEING} ${remaining}"
   elif [ $status == 'charged' ]; then
-    echo "${BATTERY_FULL} ${remaining}"
+    echo "${BATTERY_CHARGEING} ${remaining}"
   else
     echo "${remaining}"
   fi
