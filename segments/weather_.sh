@@ -1,3 +1,7 @@
+# Weather iconを使用
+# OpenWeatherMapを使用
+# APPID
+
 # Thunderstorm
 THUNDERSTORM_WITH_LIGHT_RAIN=200
 THUNDERSTORM_WITH_RAIN=201
@@ -81,11 +85,12 @@ STORM=960
 VIOLENT_STORM=961
 HURRICANE=962
 
-info=$(curl -s "http://api.openweathermap.org/data/2.5/weather?id=1850147&units=metric&appid=${OPENWEATHERMAP_APPID}")
+appid=$(OPENWEATHERMAP_APPID)
+info=$(curl -s "http://api.openweathermap.org/data/2.5/weather?id=1850147&units=metric&appid=${appid}")
 weather=$(echo "$info" | jq -r .weather[].id)
-temperature=$(echo "$info" | jq -r .main[].temp)
+temperature=$(echo "$info" | jq -r .main.temp)
 
-run_segment() {
+_get_icon() {
   case "${weather}" in
     "${THUNDERSTORM_WITH_LIGHT_RAINL}" | "${THUNDERSTORM_WITH_RAIN}" | "${LIGHT_THUNDERSTORM}" | "${THUNDERSTORM_WITH_LIGHT_DRIZZLE}" | "${THUNDERSTORM_WITH_DRIZZLE}" | "${THUNDERSTORM_WITH_HEAVY_DRIZZLE}") echo " ";;
 
@@ -115,4 +120,9 @@ run_segment() {
 
     *) echo " ";;
   esac
+}
+
+run_segment() {
+  weather_icon=$(_get_icon)
+  echo "${weather_icon} ${temperature}"
 }
