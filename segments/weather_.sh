@@ -112,5 +112,7 @@ run_segment() {
     "${SCATTERED_CLOUDS}" | "$BROKEN_CLOUDS") echo " ";;
 
     "${OVERCAST_CLOUDS}") echo " ";;
+
+    *) echo " ";;
   esac
 }
