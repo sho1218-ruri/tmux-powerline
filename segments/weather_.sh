@@ -85,10 +85,9 @@ STORM=960
 VIOLENT_STORM=961
 HURRICANE=962
 
-appid=$(OPENWEATHERMAP_APPID)
-info=$(curl -s "http://api.openweathermap.org/data/2.5/weather?id=1850147&units=metric&appid=${appid}")
+info=$(curl -s "http://api.openweathermap.org/data/2.5/weather?id=1850147&units=metric&appid=${OPENWEATHERMAP_APPID}")
 weather=$(echo "$info" | jq -r .weather[].id)
-temperature=$(echo "$info" | jq -r .main.temp)
+temperature=$(echo "$info" | jq -r .main.temp | awk '{s=($0<0)?-1:1;print int($0*s*10+0.5)/10/s;}')
 
 _get_icon() {
   case "${weather}" in
