@@ -7,6 +7,20 @@ BATTERY_QUARTER=""
 BATTERY_EMPTY=""
 BATTERY_CHARGEING=""
 
+_get_icon(){
+  if [ $value == 100 ]; then
+      echo "${BATTERY_FULL}"
+    elif [ $value -ge 75 ]&&[ $value -lt 100 ]; then
+      echo "${BATTERY_THREE_QUARTER}"
+    elif [ $value -ge 50 ] && [ $value -lt 75 ]; then
+      echo "${BATTERY_HALF}"
+    elif [ $value -ge 25 ] && [ $value -lt 50 ]; then
+      echo "${BATTERY_QUARTER}"
+    else  
+      echo "${BATTERY_EMPTY}"
+    fi  
+}
+
 run_segment() {
   info=$(pmset -g batt | tail -n 1)
   remaining=$(echo $info | awk '{ print $2 }' | sed -e 's/.$//')
@@ -14,17 +28,8 @@ run_segment() {
   value=$(echo $remaining | sed -e 's/%//')
 
   if [ $status == 'discharging' ]; then
-    if [ $value == 100 ]; then
-      echo "${BATTERY_FULL} ${remaining}"
-    elif [ $value -ge 75 ]&&[ $value -lt 100 ]; then
-      echo "${BATTERY_THREE_QUARTER} ${remaining}"
-    elif [ $value -ge 50 ] && [ $value -lt 75 ]; then
-      echo "${BATTERY_HALF} ${remaining}"
-    elif [ $value -ge 25 ] && [ $value -lt 50 ]; then
-      echo "${BATTERY_QUARTER} ${remaining}"
-    else  
-      echo "${BATTERY_EMPTY} ${remaining}"
-    fi
+   wifi_icon=$(_get_icon) 
+   echo "${wifi_icon} ${remaining}"
   elif [ $status == 'charging' ]; then
     echo "${BATTERY_CHARGEING} ${remaining}"
   elif [ $status == 'charged' ]; then
